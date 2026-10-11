@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BioLCS — Trực Quan Hóa Đột Biến Gen Thực Vật & Giải Thuật LCS</title>
+  <meta name="description" content="Nền tảng trực quan hóa thuật toán LCS (Longest Common Subsequence) ứng dụng trong di truyền học thực vật. Đồ án CS112 - Đặng Chí Thanh (MSSV: 25730067).">
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/biotech_theme.css">
+  <link rel="stylesheet" href="styles/code_stepper.css">
+  <link rel="stylesheet" href="styles/adaptive_views.css">
+
+  <!-- Three.js (Local Vendor with CDN Fallback) -->
+  <script src="vendor/three.min.js"></script>
+  <script>
+    if (!window.THREE) {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+    }
+  </script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header (Command Bar) -->
+    <header class="app-header">
+      <a class="brand-section brand-reload" id="brand-reload" href="./index.html" title="Tải lại BioLCS Studio" aria-label="Tải lại BioLCS Studio">
+        <div class="brand-logo" title="BioLCS Studio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 6c4 0 6 6 10 6s6-6 10-6M4 18c4 0 6-6 10-6s6 6 10 6"/>
+            <line x1="8" y1="9" x2="8" y2="15"/>
+            <line x1="14" y1="9" x2="14" y2="15"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title-wrap">
+            <h1 class="brand-title">BioLCS Studio</h1>
+            <span class="brand-tag">CS112</span>
+          </div>
+          <div class="brand-subtitle" id="brand-subtitle">Theo dõi Đột biến Gen Thực vật & Bộ Giải thuật LCS</div>
+        </div>
+      </a>
+
+      <div class="student-meta">
+        <div class="student-badge" id="student-badge" role="button" tabindex="0" title="Bấm để xem chi tiết thông tin đồ án & tác giả học thuật" aria-label="Thông tin sinh viên và đề tài học thuật">
+          <span class="badge-mortarboard">🎓</span>
+          <span class="badge-name" id="badge-student-name">Đặng Chí Thanh</span>
+          <span class="badge-dot">•</span>
+          <span class="badge-id" id="badge-student-id">MSSV: 25730067</span>
+          <span class="badge-dot">•</span>
+          <span class="badge-class" id="badge-student-class">Lớp: CS112.F31.LT.TTNT</span>
+          <span class="badge-dot badge-hide-sm">•</span>
+          <span class="badge-advisor badge-hide-sm" id="badge-student-advisor">GVHD: TS. Huỳnh Thị Thanh Thương</span>
+          <span class="badge-dot badge-hide-md">•</span>
+          <span class="badge-uni badge-hide-md" id="badge-student-uni">Khoa KHMT - UIT</span>
+        </div>
+        <button id="lang-toggle" class="btn btn-secondary btn-icon lang-toggle" title="Switch to English" aria-label="Chuyển đổi ngôn ngữ Tiếng Việt / English">
+          <span class="lang-toggle-text" id="lang-toggle-text">EN</span>
+        </button>
+        <!-- Hidden alias buttons for backwards compatibility -->
+        <span style="display: none;">
+          <button id="lang-btn-vi" class="lang-btn active" title="Tiếng Việt"></button>
+          <button id="lang-btn-en" class="lang-btn" title="English"></button>
+        </span>
+        <button id="theme-toggle" class="btn btn-secondary btn-icon theme-toggle" title="Chuyển chế độ Sáng / Tối" aria-label="Chuyển đổi giao diện Sáng / Tối">
+          <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Control Ribbon Bar (Command Workbench) -->
+    <section class="control-ribbon">
+      <div class="control-group">
+        <label for="testcase-select" id="label-testcase-select">Bộ Testcase Mẫu (30 Chuẩn):</label>
+        <select id="testcase-select" class="control-select"></select>
+      </div>
+
+      <div class="sequence-inputs-row">
+        <div class="control-group input-with-counter">
+          <label for="input-seq-x" id="label-seq-x">Chuỗi X (Bộ Gen 1):</label>
+          <input type="text" id="input-seq-x" class="control-input" placeholder="Ví dụ: ACCGGTC..." spellcheck="false" autocomplete="off">
+          <span id="counter-x" class="char-counter">0 bp</span>
+        </div>
+
+        <button id="btn-swap" class="btn btn-secondary btn-icon" title="Hoán đổi 2 chuỗi (X ↔ Y)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 7h12l-3-3"></path>
+            <path d="M17 17H5l3 3"></path>
+          </svg>
+        </button>
+
+        <div class="control-group input-with-counter">
+          <label for="input-seq-y" id="label-seq-y">Chuỗi Y (Bộ Gen 2):</label>
+          <input type="text" id="input-seq-y" class="control-input" placeholder="Ví dụ: AGTGTC..." spellcheck="false" autocomplete="off">
+          <span id="counter-y" class="char-counter">0 bp</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label for="algo-select" id="label-algo-select">Giải Thuật Thực Thi:</label>
+        <select id="algo-select" class="control-select">
+          <option value="grid">1. Grid DP 2D (Toàn diện & Traceback)</option>
+          <option value="hirschberg">2. Hirschberg D&C (Tối ưu Bộ nhớ Tuyến tính)</option>
+          <option value="space_opt">3. Space-Optimized DP (Bộ nhớ 2 Dòng O(min(M,N)))</option>
+        </select>
+      </div>
+
+      <button id="btn-run" class="btn btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <span id="btn-run-text">Phân Tích & Chạy</span>
+      </button>
+    </section>
+
+    <!-- Biological Context Banner -->
+    <div id="bio-context-bar" class="bio-context-bar">
+      <div class="bio-desc">
+        <span id="bio-tag" class="bio-tag">01_NORMAL</span>
+        <span id="bio-desc-text">Đang tải thông tin mẫu thực vật...</span>
+      </div>
+      <div class="base-legend" id="base-legend">
+        <span id="label-base-legend">Nucleotide:</span>
+        <span class="nt-badge nt-a">A</span>
+        <span class="nt-badge nt-t">T</span>
+        <span class="nt-badge nt-g">G</span>
+        <span class="nt-badge nt-c">C</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="view-tabs">
+      <button class="tab-btn active" data-tab="matrix" id="tab-btn-matrix">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        <span id="tab-matrix-label">Ma Trận DP 2D</span>
+      </button>
+      <button class="tab-btn" data-tab="genomic" id="tab-btn-genomic">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        </svg>
+        <span id="tab-genomic-label">Genomic Lab & 3D Helix</span>
+        <span class="tab-badge-live" id="tab-genomic-badge">3D WebGL</span>
+      </button>
+      <button class="tab-btn" data-tab="benchmark" id="tab-btn-benchmark">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span id="tab-benchmark-label">Benchmark Arena</span>
+      </button>
+    </nav>
+
+    <!-- Workspace Main Views -->
+    <main class="workspace-area">
+      <!-- Tab 1: DP Matrix Studio (Split-View Canvas + Code Stepper) -->
+      <section id="pane-matrix" class="tab-pane active">
+        <div class="matrix-studio-split">
+          <!-- Left Column: Visualizer Canvas (2D Matrix / 2-Row / Hirschberg) -->
+          <div class="glass-panel matrix-visualizer-panel">
+            <div class="panel-header">
+              <h2 class="panel-title" id="matrix-panel-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="3" x2="9" y2="21"></line>
+                  <line x1="3" y1="9" x2="21" y2="9"></line>
+                </svg>
+                <span id="title-visualizer-text">Không Gian Ma Trận Quy Hoạch Động (m+1) × (n+1)</span>
+              </h2>
+              <div class="matrix-legend-hints" id="matrix-legend-hints">
+                <span class="legend-chip legend-chip-match" title="Ký tự trùng khớp thực sự đưa vào chuỗi LCS (Match ↖)"><span class="chip-dot"></span> Khớp LCS (↖)</span>
+                <span class="legend-chip legend-chip-skip" title="Bước nhảy ma trận dịch hàng/cột (Skip ↑/←)"><span class="chip-dot"></span> Dịch chuyển (↑/←)</span>
+                <span class="legend-chip legend-chip-active" title="Ô hiện tại đang được tính toán"><span class="chip-dot"></span> Đang tính</span>
+                <span class="legend-chip legend-chip-compare" title="Các ô con đang được so sánh"><span class="chip-dot"></span> So sánh</span>
+                <button id="btn-quick-3d" class="btn btn-secondary btn-sm" style="margin-left: 10px; font-size: 0.72rem; padding: 2px 8px; cursor: pointer;" title="Chuyển nhanh sang Genomic Lab & Chuỗi Xoắn 3D">🧬 Xem Chuỗi Xoắn 3D →</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="step-formula-bar" class="step-formula-bar">
+                <div class="formula-text">Khởi tạo ma trận...</div>
+                <span class="step-type-pill step-type-fill">Ready</span>
+              </div>
+              <div id="matrix-viewport" class="matrix-viewport"></div>
+              <div id="alternate-viewport" class="alternate-viewport" style="display: none;"></div>
+            </div>
+          </div>
+
+          <!-- Right Column: Synchronized Code Stepper -->
+          <div class="code-stepper-panel" id="code-stepper-container"></div>
+        </div>
+      </section>
+
+      <!-- Tab 2: Genomic Lab & 3D Helix -->
+      <section id="pane-genomic" class="tab-pane">
+        <!-- Adaptive Non-Genomic Notice Banner -->
+        <div id="non-genomic-notice" class="non-genomic-banner" style="display: none;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <div>
+            <h3>Chế Độ Đối Sánh Chuỗi Ký Tự Tổng Quát (General String Matching)</h3>
+            <p id="non-genomic-reason-text">Bộ dữ liệu hiện tại không phải chuỗi nucleotide sinh học (A, T, G, C, U). Mô hình chuỗi xoắn kép 3D được ẩn đi để đảm bảo tính chuẩn xác khoa học. Bạn có thể xem bảng đối sánh và thống kê độ tương đồng ký tự bên dưới.</p>
+          </div>
+        </div>
+
+        <div class="genomic-lab-grid" id="genomic-lab-grid">
+          <!-- 3D DNA Canvas Viewport -->
+          <div class="glass-panel" id="panel-3d-helix">
+            <div class="panel-header">
+              <h2 class="panel-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                Mô Hình 3D Chuỗi Xoắn Kép DNA (Three.js)
+              </h2>
+              <span class="panel-meta-hint">Tự động quay & Bừng sáng khi Match</span>
+            </div>
+            <div class="panel-body">
+              <div id="dna-canvas-container" class="dna-3d-container"></div>
+            </div>
+          </div>
+
+          <!-- Genetic Alignment & Mutation Breakdown -->
+          <div class="glass-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="4 17 10 11 4 5"></polyline>
+                  <line x1="12" y1="19" x2="20" y2="19"></line>
+                </svg>
+                Dải Gióng Hàng & Thống Kê Biến Dị Di Truyền
+              </h2>
+            </div>
+            <div class="panel-body">
+              <div class="alignment-container">
+                <div id="alignment-tracks"></div>
+                <div id="alignment-stats"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 3: Benchmark Arena -->
+      <section id="pane-benchmark" class="tab-pane">
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h2 class="panel-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              Đối Đầu Hiệu Năng 3 Giải Thuật (Performance Benchmark)
+            </h2>
+          </div>
+          <div class="panel-body">
+            <div id="benchmark-container"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Fixed Animation Timeline Controller -->
+    <footer class="timeline-toolbar">
+      <div class="timeline-info">
+        <div id="step-counter" class="step-counter">Bước: 0 / 0</div>
+        <div id="phase-text" class="phase-text">Khởi tạo</div>
+      </div>
+
+      <div class="timeline-buttons">
+        <button id="btn-reset" class="btn btn-secondary btn-icon" title="Làm mới lại từ đầu (R)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 2v6h6"></path>
+            <path d="M3 13a9 9 0 1 0 3-7.7L3 8"></path>
+          </svg>
+        </button>
+
+        <button id="btn-prev" class="btn btn-secondary btn-icon" title="Lùi 1 bước (Mũi tên trái)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <button id="btn-play" class="btn btn-primary" title="Phát / Dừng (Phím cách)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <span id="btn-play-text">Chạy tiếp</span>
+        </button>
+
+        <button id="btn-next" class="btn btn-secondary btn-icon" title="Tiến 1 bước (Mũi tên phải)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <div class="timeline-slider-wrapper">
+        <input type="range" id="timeline-slider" class="timeline-slider" min="0" max="0" value="0">
+      </div>
+
+      <div class="speed-control">
+        <label for="speed-select" id="label-speed-select">Tốc độ:</label>
+        <select id="speed-select" class="speed-select">
+          <option value="50">Siêu tốc (50ms)</option>
+          <option value="150">Nhanh (150ms)</option>
+          <option value="250" selected>Chuẩn (250ms)</option>
+          <option value="500">Chậm (500ms)</option>
+          <option value="1000">Từng nhịp (1s)</option>
+        </select>
+      </div>
+    </footer>
+
+    <!-- Academic Project & Student Credits Modal -->
+    <div id="modal-academic-info" class="academic-modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-academic-title">
+      <div class="academic-modal-card">
+        <div class="academic-modal-header">
+          <div class="academic-modal-title-wrap">
+            <span class="modal-academic-icon">🎓</span>
+            <div>
+              <h3 class="modal-academic-title" id="modal-academic-title">Thông Tin Đồ Án & Tác Giả Học Thuật</h3>
+              <p class="modal-academic-sub" id="modal-academic-sub">Trường Đại học Công nghệ Thông tin — ĐHQG-HCM (UIT)</p>
+            </div>
+          </div>
+          <button id="btn-close-academic-modal" class="btn-academic-modal-close" aria-label="Đóng">&times;</button>
+        </div>
+        <div class="academic-modal-body">
+          <div class="academic-info-grid">
+            <div class="info-row">
+              <span class="info-label" id="modal-lbl-author">Sinh viên thực hiện:</span>
+              <span class="info-value"><strong id="modal-val-author">Đặng Chí Thanh</strong></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label" id="modal-lbl-id">Mã số sinh viên (MSSV):</span>
+              <span class="info-value"><code class="info-code" id="modal-val-id">25730067</code></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label" id="modal-lbl-class">Mã lớp học phần:</span>
+              <span class="info-value"><strong id="modal-val-class">CS112.F31.LT.TTNT</strong></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label" id="modal-lbl-course">Học phần môn học:</span>
+              <span class="info-value" id="modal-val-course">Phân tích và Thiết kế Thuật toán (CS112)</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label" id="modal-lbl-advisor">Giảng viên hướng dẫn:</span>
+              <span class="info-value"><strong id="modal-val-advisor">TS. Huỳnh Thị Thanh Thương</strong></span>
+            </div>
+            <div class="info-row full-width">
+              <span class="info-label" id="modal-lbl-topic">Đề tài Bài tập lớn:</span>
+              <span class="info-value" id="modal-val-topic">BioLCS — Nền Tảng Trực Quan Hóa Đa Giải Thuật So Khớp Hệ Gen Thực Vật & Đột Biến Di Truyền</span>
+            </div>
+            <div class="info-row full-width">
+              <span class="info-label" id="modal-lbl-links">Liên kết trực tuyến:</span>
+              <span class="info-value">
+                <a href="https://biolcs.vercel.app" target="_blank" rel="noopener" class="academic-link">🌐 Live Demo: biolcs.vercel.app</a>
+                <span class="badge-dot">•</span>
+                <a href="https://github.com/uit-25730067-chithanh/cs112-biolcs" target="_blank" rel="noopener" class="academic-link">📦 GitHub Repository</a>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="academic-modal-footer">
+          <div class="academic-copyright" id="modal-academic-copyright">© 2026 Đặng Chí Thanh — MSSV: 25730067. Bản quyền phục vụ học phần CS112 tại UIT.</div>
+          <button id="btn-close-academic-action" class="btn btn-secondary btn-sm">Đóng</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications Hub -->
+    <div id="toast-container" class="toast-container"></div>
+  </div>
+
+  <!-- Master ES Module Entrypoint -->
+  <script type="module" src="ui/app.js"></script>
+</body>
+</html>

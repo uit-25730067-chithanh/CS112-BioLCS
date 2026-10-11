@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_01_03",
+  "category": "01_normal",
+  "description": "Cặp chuỗi gen kinh điển từ tác phẩm khoa học viễn tưởng GATTACA",
+  "input": {
+    "sequence_x": "GATTACA",
+    "sequence_y": "GCATGCU"
+  },
+  "expected_output": {
+    "lcs_length": 4,
+    "possible_lcs": [
+      "GATC"
+    ],
+    "is_valid": true
+  }
+}

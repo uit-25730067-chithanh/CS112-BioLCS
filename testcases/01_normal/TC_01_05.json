@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_01_05",
+  "category": "01_normal",
+  "description": "Đoạn trình tự nucleotide 12-bp thực vật có tỷ lệ tương đồng cao",
+  "input": {
+    "sequence_x": "CGTACCAGTTAC",
+    "sequence_y": "TAGTACTCGAC"
+  },
+  "expected_output": {
+    "lcs_length": 8,
+    "possible_lcs": [
+      "GTACCGAC"
+    ],
+    "is_valid": true
+  }
+}

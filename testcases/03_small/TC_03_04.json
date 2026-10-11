@@ -1,0 +1,17 @@
+{
+  "test_id": "TC_03_04",
+  "category": "03_small",
+  "description": "Chuỗi nhỏ 5x5: Mẫu hình đan xen phân nhánh truy vết",
+  "input": {
+    "sequence_x": "CGATG",
+    "sequence_y": "GCTGA"
+  },
+  "expected_output": {
+    "lcs_length": 3,
+    "possible_lcs": [
+      "CGA",
+      "GTG"
+    ],
+    "is_valid": true
+  }
+}

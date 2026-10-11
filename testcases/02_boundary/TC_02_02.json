@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_02_02",
+  "category": "02_boundary",
+  "description": "Biên cực trị: Một chuỗi rỗng đối đầu chuỗi có nucleotide",
+  "input": {
+    "sequence_x": "",
+    "sequence_y": "ACGT"
+  },
+  "expected_output": {
+    "lcs_length": 0,
+    "possible_lcs": [
+      ""
+    ],
+    "is_valid": true
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "test_id": "TC_05_03",
+  "category": "05_special",
+  "description": "Cấu trúc kẹp tóc RNA đối xứng (Palindromic Hairpin Loop osa-miR156 Lúa nước)",
+  "input": {
+    "sequence_x": "UGACAGAAGAGAGUGAGCAC",
+    "sequence_y": "GUGCUCACUCUCUUCUGUCA"
+  },
+  "expected_output": {
+    "lcs_length": 8,
+    "possible_lcs": [
+      "UGACGUCA",
+      "UGCUAGCA"
+    ],
+    "is_valid": true
+  }
+}

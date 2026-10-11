@@ -1,0 +1,99 @@
+/* Two-Row Space-Optimized DP Styles */
+.two-row-wrap {
+  padding: 14px;
+}
+
+.two-row-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.two-row-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.12);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.two-row-ram {
+  font-size: 0.75rem;
+  color: var(--text-muted, #8a8f98);
+}
+
+.two-row-ram strong {
+  color: #10b981;
+}
+
+.two-row-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+.two-row-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.two-row-table th, .two-row-table td {
+  border: 1px solid var(--border-hairline, rgba(255, 255, 255, 0.08));
+  padding: 8px;
+  text-align: center;
+}
+
+.two-row-table th {
+  background: var(--surface-elevated, #161718);
+  color: var(--text-muted, #8a8f98);
+  font-size: 0.75rem;
+}
+
+.two-row-table .row-label {
+  font-weight: 600;
+  text-align: left;
+  background: var(--surface-elevated, #161718);
+  color: var(--text-primary, #f7f8f8);
+}
+
+.cell-active {
+  background: rgba(16, 185, 129, 0.25) !important;
+  color: #10b981 !important;
+  font-weight: bold;
+}
+
+.cell-ref {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #f59e0b !important;
+}
+
+/* Non-Genomic Context Notice */
+.non-genomic-banner {
+  padding: 20px 24px;
+  border-radius: 8px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.non-genomic-banner h3 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #f59e0b;
+  margin-bottom: 4px;
+}
+
+.non-genomic-banner p {
+  font-size: 0.8rem;
+  color: var(--text-muted, #8a8f98);
+  line-height: 1.5;
+}

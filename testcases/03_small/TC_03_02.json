@@ -1,0 +1,17 @@
+{
+  "test_id": "TC_03_02",
+  "category": "03_small",
+  "description": "Chuỗi nhỏ 4x4: Hoán vị nucleotide kiểm tra đường đi ma trận DP",
+  "input": {
+    "sequence_x": "ATGC",
+    "sequence_y": "AGTC"
+  },
+  "expected_output": {
+    "lcs_length": 3,
+    "possible_lcs": [
+      "ATC",
+      "AGC"
+    ],
+    "is_valid": true
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_05_04",
+  "category": "05_special",
+  "description": "Chuỗi vi vệ tinh lặp đoạn ngắn (Tandem Repeats SSR) trong chọn giống cây trồng",
+  "input": {
+    "sequence_x": "ATCGATCGATCGGATAGATAGATAGATATTTTTTCTCTCTCTCTCTGCGC",
+    "sequence_y": "ATCGATCGATCGGATAGATAGATATTTTTTCTCTCTCTCTCTCTCTGCGC"
+  },
+  "expected_output": {
+    "lcs_length": 47,
+    "possible_lcs": [
+      "ATCGATCGATCGGATAGATAGATATTTTTTTCTCTCTCTCTCTGCGC"
+    ],
+    "is_valid": true
+  }
+}

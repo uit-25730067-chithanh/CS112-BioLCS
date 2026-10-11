@@ -1,0 +1,17 @@
+{
+  "test_id": "TC_01_04",
+  "category": "01_normal",
+  "description": "Cặp chuỗi kiểm chứng bài báo gốc Hirschberg (CACM 1975)",
+  "input": {
+    "sequence_x": "AGCAT",
+    "sequence_y": "GAC"
+  },
+  "expected_output": {
+    "lcs_length": 2,
+    "possible_lcs": [
+      "AC",
+      "GA"
+    ],
+    "is_valid": true
+  }
+}

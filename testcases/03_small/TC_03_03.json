@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_03_03",
+  "category": "03_small",
+  "description": "Chuỗi nhỏ 5x4: Đột biến mất đoạn 1 nucleotide ở giữa",
+  "input": {
+    "sequence_x": "AGTAC",
+    "sequence_y": "ATAC"
+  },
+  "expected_output": {
+    "lcs_length": 4,
+    "possible_lcs": [
+      "ATAC"
+    ],
+    "is_valid": true
+  }
+}

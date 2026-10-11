@@ -1,0 +1,14 @@
+{
+  "test_id": "TC_06_05",
+  "category": "06_invalid",
+  "description": "Dữ liệu lỗi: Thiếu trường dữ liệu chuỗi bắt buộc (Null or undefined sequence)",
+  "input": {
+    "sequence_x": null,
+    "sequence_y": "ACGT"
+  },
+  "expected_output": {
+    "is_valid": false,
+    "error_type": "MISSING_INPUT",
+    "error_message": "Required sequence field is null or undefined."
+  }
+}

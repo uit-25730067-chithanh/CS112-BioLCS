@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_01_01",
+  "category": "01_normal",
+  "description": "So khớp chuỗi nucleotide mẫu giáo khoa (Textbook DNA pair)",
+  "input": {
+    "sequence_x": "ACCGGTC",
+    "sequence_y": "AGTGTC"
+  },
+  "expected_output": {
+    "lcs_length": 5,
+    "possible_lcs": [
+      "AGGTC"
+    ],
+    "is_valid": true
+  }
+}

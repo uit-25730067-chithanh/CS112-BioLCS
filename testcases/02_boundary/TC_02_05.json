@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_02_05",
+  "category": "02_boundary",
+  "description": "Biên cực trị: Chuỗi 1 ký tự đối đầu chuỗi dài chứa ký tự đó ở nhiều vị trí",
+  "input": {
+    "sequence_x": "A",
+    "sequence_y": "TATATATA"
+  },
+  "expected_output": {
+    "lcs_length": 1,
+    "possible_lcs": [
+      "A"
+    ],
+    "is_valid": true
+  }
+}

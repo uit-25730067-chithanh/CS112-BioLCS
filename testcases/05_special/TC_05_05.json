@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_05_05",
+  "category": "05_special",
+  "description": "Đột biến điểm đơn nucleotide (SNP) trong gen beta-globin kiểm soát biến dị di truyền",
+  "input": {
+    "sequence_x": "ATGGTGCACCTGACTCCTGAGGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAG",
+    "sequence_y": "ATGGTGCACCTGACTCCTGTGGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAG"
+  },
+  "expected_output": {
+    "lcs_length": 53,
+    "possible_lcs": [
+      "ATGGTGCACCTGACTCCTGGGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAG"
+    ],
+    "is_valid": true
+  }
+}

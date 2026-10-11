@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_03_05",
+  "category": "03_small",
+  "description": "Chuỗi nhỏ 6x5: Vùng khởi đầu phiên mã (Start codon motif)",
+  "input": {
+    "sequence_x": "ATGCTA",
+    "sequence_y": "AGCTA"
+  },
+  "expected_output": {
+    "lcs_length": 5,
+    "possible_lcs": [
+      "AGCTA"
+    ],
+    "is_valid": true
+  }
+}

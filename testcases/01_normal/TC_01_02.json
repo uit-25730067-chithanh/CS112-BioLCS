@@ -1,0 +1,17 @@
+{
+  "test_id": "TC_01_02",
+  "category": "01_normal",
+  "description": "Ví dụ kinh điển từ giáo trình CLRS Cormen et al.",
+  "input": {
+    "sequence_x": "BDAB",
+    "sequence_y": "BACDB"
+  },
+  "expected_output": {
+    "lcs_length": 3,
+    "possible_lcs": [
+      "BDB",
+      "BAB"
+    ],
+    "is_valid": true
+  }
+}

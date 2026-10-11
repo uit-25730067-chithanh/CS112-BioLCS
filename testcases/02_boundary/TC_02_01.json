@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_02_01",
+  "category": "02_boundary",
+  "description": "Biên cực trị: Cả hai chuỗi nucleotide đều rỗng",
+  "input": {
+    "sequence_x": "",
+    "sequence_y": ""
+  },
+  "expected_output": {
+    "lcs_length": 0,
+    "possible_lcs": [
+      ""
+    ],
+    "is_valid": true
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "test_id": "TC_06_02",
+  "category": "06_invalid",
+  "description": "Dữ liệu lỗi: Chuỗi chứa ký tự đặc biệt ngoài bảng mã nucleotide",
+  "input": {
+    "sequence_x": "AC@G#T",
+    "sequence_y": "ACGT"
+  },
+  "expected_output": {
+    "is_valid": false,
+    "error_type": "INVALID_CHARACTERS",
+    "error_message": "Sequence contains illegal special characters: @, #."
+  }
+}

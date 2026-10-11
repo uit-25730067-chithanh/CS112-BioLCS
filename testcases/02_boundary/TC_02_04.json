@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_02_04",
+  "category": "02_boundary",
+  "description": "Biên cực trị: Hai chuỗi nucleotide giống hệt nhau 100%",
+  "input": {
+    "sequence_x": "AGCTAGCT",
+    "sequence_y": "AGCTAGCT"
+  },
+  "expected_output": {
+    "lcs_length": 8,
+    "possible_lcs": [
+      "AGCTAGCT"
+    ],
+    "is_valid": true
+  }
+}

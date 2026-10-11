@@ -1,0 +1,30 @@
+{
+  "name": "biolcs-studio",
+  "version": "1.0.0",
+  "description": "Interactive Plant Genomics Sequence Alignment & LCS Visualizer featuring Grid DP, Space-Optimized 2-Row DP, and Hirschberg Algorithm",
+  "type": "module",
+  "homepage": "https://biolcs.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uit-25730067-chithanh/cs112-biolcs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/uit-25730067-chithanh/cs112-biolcs/issues"
+  },
+  "scripts": {
+    "test": "node tests/test_core.js",
+    "test:core": "node tests/test_core.js",
+    "test:testcases": "node tests/test_testcases.js",
+    "test:regressions": "node tests/test_biolcs_regressions.js",
+    "test:e2e": "node tests/test_ui_e2e.js",
+    "test:audit": "node tests/test_all_buttons_and_cases.js",
+    "test:all": "node tests/test_core.js && node tests/test_testcases.js && node tests/test_ui_e2e.js && node tests/test_all_buttons_and_cases.js",
+    "generate:testcases": "node tests/generate_testcases.js",
+    "serve": "npx serve . -p 3000"
+  },
+  "author": "Dang Chi Thanh (MSSV: 25730067)",
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}

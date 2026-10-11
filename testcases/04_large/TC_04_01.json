@@ -1,0 +1,17 @@
+{
+  "test_id": "TC_04_01",
+  "category": "04_large",
+  "description": "Chuỗi lớn 50-bp: Benchmark hiệu năng cấp độ exon ngắn thực vật",
+  "input": {
+    "sequence_x": "AATCCCTTAGAAGCCTCGTATACAAATACTGAATTCGAGTAGCCTCCCCG",
+    "sequence_y": "CTGGCGCTTGGAAGTATGAGCCTGCCAGAAGCTGATTCTAATGACGGTTT"
+  },
+  "expected_output": {
+    "lcs_length": 30,
+    "possible_lcs": [
+      "TCCTTAGAAGCCTCGAACATCTAATCGGTT",
+      "CCCTTAGAAGCCTGCAAACTGATTCTATCG"
+    ],
+    "is_valid": true
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "test_id": "TC_02_03",
+  "category": "02_boundary",
+  "description": "Biên cực trị: Hai chuỗi hoàn toàn không có ký tự chung (Disjoint)",
+  "input": {
+    "sequence_x": "AAAA",
+    "sequence_y": "CCCC"
+  },
+  "expected_output": {
+    "lcs_length": 0,
+    "possible_lcs": [
+      ""
+    ],
+    "is_valid": true
+  }
+}

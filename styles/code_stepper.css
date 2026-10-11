@@ -1,0 +1,206 @@
+/* Split View Layout: Matrix Visualizer (Left) + Code Stepper (Right) */
+.matrix-studio-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(360px, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+@media (max-width: 1080px) {
+  .matrix-studio-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Code Stepper Panel Container */
+.code-stepper-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+  background: var(--surface-base, #0f1011);
+  border: 1px solid var(--border-hairline, rgba(255, 255, 255, 0.08));
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stepper-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--surface-elevated, #161718);
+  border-bottom: 1px solid var(--border-hairline, rgba(255, 255, 255, 0.08));
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stepper-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary, #f7f8f8);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.stepper-title-wrap svg {
+  color: var(--accent-primary, #5e6ad2);
+}
+
+.stepper-lang-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface-base, #0f1011);
+  padding: 2px;
+  border-radius: 6px;
+  border: 1px solid var(--border-hairline, rgba(255, 255, 255, 0.08));
+}
+
+.lang-tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #8a8f98);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lang-tab-btn.active, .lang-tab-btn:hover {
+  background: var(--surface-elevated, #161718);
+  color: var(--text-primary, #f7f8f8);
+}
+
+.lang-tab-btn.active {
+  color: #ffffff !important;
+  background: rgba(99, 102, 241, 0.25) !important;
+  border: 1px solid #6366f1 !important;
+  font-weight: 600;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.25);
+}
+
+[data-theme="light"] .lang-tab-btn.active {
+  color: #3730a3 !important;
+  background: #eef2ff !important;
+  border: 1px solid #4f46e5 !important;
+  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.15);
+}
+
+/* Code Scroll Body */
+.stepper-code-scroll {
+  flex: 1;
+  max-height: 380px;
+  overflow-y: auto;
+  overflow-x: auto;
+  background: var(--surface-base, #0a0b0d);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  padding: 8px 0;
+}
+
+.code-table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.code-row {
+  display: table-row;
+  transition: background 0.15s ease;
+}
+
+.code-row.active-line {
+  background: rgba(94, 106, 210, 0.22);
+}
+
+.code-num {
+  display: table-cell;
+  width: 38px;
+  padding: 2px 10px 2px 6px;
+  text-align: right;
+  color: var(--text-muted, #60646c);
+  user-select: none;
+  border-right: 1px solid var(--border-hairline, rgba(255, 255, 255, 0.08));
+  font-size: 0.72rem;
+}
+
+.code-row.active-line .code-num {
+  color: var(--accent-primary, #a5b4fc);
+  font-weight: bold;
+  border-right: 2px solid var(--accent-primary, #6366f1);
+}
+
+.code-text {
+  display: table-cell;
+  padding: 2px 12px;
+  white-space: pre;
+  color: var(--text-primary, #e2e8f0);
+}
+
+.code-row.active-line .code-text {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Scope Variable Inspector */
+.stepper-scope-inspector {
+  padding: 10px 14px;
+  background: var(--surface-elevated, #161718);
+  border-top: 1px solid var(--border-hairline, rgba(255, 255, 255, 0.08));
+}
+
+.scope-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.scope-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-muted, #8a8f98);
+}
+
+.scope-phase-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.scope-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+}
+
+.scope-item .k {
+  color: var(--text-muted, #8a8f98);
+  font-size: 0.7rem;
+}
+
+.scope-item .v {
+  color: var(--text-primary, #f7f8f8);
+  font-weight: 600;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.scope-match-yes {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.scope-match-no {
+  color: #f59e0b;
+}
