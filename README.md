@@ -9,7 +9,7 @@
 ![BioLCS Studio Cover](docs/cover.png)
 
 > **BioLCS Studio** is an academic-grade algorithm visualizer and empirical benchmark suite engineered for **CS112 (Algorithm Analysis & Design)** at **VNUHCM - University of Information Technology (UIT)**.  
-> The project investigates and resolves the quadratic memory bottleneck ($\mathcal{O}(m \times n)$) in unweighted sequence alignment by contrasting **Classic 2D Grid DP**, **Space-Optimized 2-Row DP**, and **Hirschberg's Divide-and-Conquer Algorithm (1975)** across authentic chloroplast *rbcL* gene sequences from *Oryza sativa* (Rice) and *Zea mays* (Maize).
+> The project investigates and resolves the quadratic memory bottleneck (`O(m × n)`) in unweighted sequence alignment by contrasting **Classic 2D Grid DP**, **Space-Optimized 2-Row DP**, and **Hirschberg's Divide-and-Conquer Algorithm (1975)** across authentic chloroplast *rbcL* gene sequences from *Oryza sativa* (Rice) and *Zea mays* (Maize).
 
 ---
 
@@ -22,6 +22,8 @@
   - [2.3 Space-Optimized 2-Row Rolling DP](#23-space-optimized-2-row-rolling-dp)
   - [2.4 Hirschberg's Divide-and-Conquer Algorithm (1975)](#24-hirschbergs-divide-and-conquer-algorithm-1975)
 - [3. Rigorous Proof of Time & Space Complexity](#3-rigorous-proof-of-time--space-complexity)
+  - [3.1 Time Complexity: O(m × n)](#31-time-complexity-om--n)
+  - [3.2 Space Complexity: O(min(m, n))](#32-space-complexity-ominm-n)
 - [4. Empirical Head-to-Head Benchmark Suite](#4-empirical-head-to-head-benchmark-suite)
 - [5. System Architecture & Technical Craftsmanship](#5-system-architecture--technical-craftsmanship)
 - [6. Standardized 30-Testcase Benchmark Taxonomy](#6-standardized-30-testcase-benchmark-taxonomy)
@@ -43,7 +45,7 @@ Sequence Y (Zea mays rbcL):      A T G T C A C C A C A A A C A G A ...
 ```
 
 ### The Quadratic Bottleneck in Browser Runtime
-Classic dynamic programming computes an $(m + 1) \times (n + 1)$ matrix. When analyzing real biological sequences:
+Classic dynamic programming computes an `(m + 1) × (n + 1)` matrix. When analyzing real biological sequences:
 * Chloroplast ribulose-1,5-bisphosphate carboxylase/oxygenase large subunit (*rbcL*) sequences typically measure $m \approx 261\text{ bp}$ and $n \approx 261\text{ bp}$.
 * The full table allocates $(261 + 1) \times (261 + 1) = 68{,}644\text{ cells}$.
 * In JavaScript virtual machines (V8), allocating large multidimensional arrays and maintaining dynamic SVG/DOM trace nodes for animation triggers substantial Garbage Collection (GC) pauses, rendering mobile and standard browser tabs unresponsive.
@@ -58,10 +60,13 @@ Classic dynamic programming computes an $(m + 1) \times (n + 1)$ matrix. When an
 ### 2.1 Problem Formulation
 
 Let $\Sigma = \{A, C, G, T\}$ denote the standard DNA nucleotide alphabet. Given two sequences:
-$$X = \langle x_1, x_2, \dots, x_m \rangle \quad \text{and} \quad Y = \langle y_1, y_2, \dots, y_n \rangle \quad (x_i, y_j \in \Sigma)$$
+
+$$
+X = \langle x_1, x_2, \dots, x_m \rangle \quad \text{and} \quad Y = \langle y_1, y_2, \dots, y_n \rangle \quad (x_i, y_j \in \Sigma)
+$$
 
 A sequence $Z = \langle z_1, z_2, \dots, z_k \rangle$ is a **subsequence** of $X$ if there exists a strictly increasing sequence of indices $\langle i_1, i_2, \dots, i_k \rangle$ such that $x_{i_r} = z_r$ for all $r \in \{1, \dots, k\}$.  
-The **LCS problem** seeks a common subsequence $Z$ of maximal length $|Z| = k^*$.
+The **LCS problem** seeks a common subsequence $Z$ of maximal length $|Z| = k^\star$.
 
 ---
 
@@ -69,19 +74,23 @@ The **LCS problem** seeks a common subsequence $Z$ of maximal length $|Z| = k^*$
 
 The optimal substructure of LCS satisfies the Bellman recurrence relation for prefix subproblems $L[i, j] = |LCS(X[1 \dots i], Y[1 \dots j])|$:
 
-$$L[i, j] = \begin{cases} 
+$$
+L[i, j] = \begin{cases} 
 0 & \text{if } i = 0 \text{ or } j = 0 \\
 L[i-1, j-1] + 1 & \text{if } i, j > 0 \text{ and } x_i = y_j \\
 \max\big(L[i-1, j], L[i, j-1]\big) & \text{if } i, j > 0 \text{ and } x_i \ne y_j 
-\end{cases}$$
+\end{cases}
+$$
 
 To recover the actual sequence string, a traceback direction matrix $B[i, j]$ is maintained simultaneously:
 
-$$B[i, j] = \begin{cases}
+$$
+B[i, j] = \begin{cases}
 \nwarrow \text{ (DIAG)} & \text{if } x_i = y_j \\
 \uparrow \text{ (UP)} & \text{if } x_i \ne y_j \text{ and } L[i-1, j] \ge L[i, j-1] \\
 \leftarrow \text{ (LEFT)} & \text{if } x_i \ne y_j \text{ and } L[i-1, j] < L[i, j-1]
-\end{cases}$$
+\end{cases}
+$$
 
 * **Time Complexity**: $\Theta(m \times n)$ operations.
 * **Space Complexity**: $\Theta(m \times n)$ words to preserve $L$ and $B$.
@@ -92,10 +101,12 @@ $$B[i, j] = \begin{cases}
 
 Observing that cell evaluation at row $i$ depends strictly on elements in row $i-1$ and row $i$, the full matrix can be compressed into a two-row ping-pong cyclic buffer indexed by parity ($i \bmod 2$):
 
-$$L[i \bmod 2, j] = \begin{cases}
+$$
+L[i \bmod 2, j] = \begin{cases}
 L[(i-1) \bmod 2, j-1] + 1 & \text{if } x_i = y_j \\
 \max\big(L[(i-1) \bmod 2, j], L[i \bmod 2, j-1]\big) & \text{if } x_i \ne y_j
-\end{cases}$$
+\end{cases}
+$$
 
 * **Space Complexity**: $\Theta(\min(m, n))$ words by orienting the shorter sequence along the columns.
 * **Critical Limitation**: Because historical rows are overwritten, traceback vectors cannot be retained. This algorithm solves the **LCS length** in linear space, but **cannot reconstruct the actual alignment string**.
@@ -104,49 +115,77 @@ L[(i-1) \bmod 2, j-1] + 1 & \text{if } x_i = y_j \\
 
 ### 2.4 Hirschberg's Divide-and-Conquer Algorithm (1975)
 
-Daniel S. Hirschberg synthesized Divide-and-Conquer with Dynamic Programming, achieving the best of both paradigms: **linear space $\mathcal{O}(\min(m, n))$ AND complete sequence recovery in $\mathcal{O}(m \times n)$ time**.
+Daniel S. Hirschberg synthesized Divide-and-Conquer with Dynamic Programming, achieving the best of both paradigms: **linear space `O(min(m, n))` AND complete sequence recovery in `O(m × n)` time**.
 
 #### Algorithmic Mechanism
 
 1. **Midpoint Bisection**: Split sequence $X$ at index $mid = \lfloor m / 2 \rfloor$ into $X_{left} = X[1 \dots mid]$ and $X_{right} = X[mid + 1 \dots m]$.
+
 2. **Forward DP Vector**: Compute the last row of the LCS matrix between $X_{left}$ and $Y$ using a 2-row rolling buffer:
-   $$F(j) = \text{LLCS}(X[1 \dots mid], Y[1 \dots j]), \quad \forall j \in \{0, \dots, n\}$$
+
+$$
+F(j) = \text{LLCS}(X[1 \dots mid], Y[1 \dots j]), \quad \forall j \in \{0, \dots, n\}
+$$
+
 3. **Reverse DP Vector**: Compute the last row of the LCS matrix between the reversed suffix $X_{right}^R$ and reversed $Y^R$:
-   $$R(j) = \text{LLCS}(X^R[mid + 1 \dots m], Y^R[j + 1 \dots n]), \quad \forall j \in \{0, \dots, n\}$$
-4. **Optimal Cut Point Identification**: The optimal boundary index $k^*$ in $Y$ that maximizes the sum of left and right alignments is:
-   $$k^* = \arg\max_{0 \le k \le n} \big(F(k) + R(n - k)\big)$$
+
+$$
+R(j) = \text{LLCS}(X^R[mid + 1 \dots m], Y^R[j + 1 \dots n]), \quad \forall j \in \{0, \dots, n\}
+$$
+
+4. **Optimal Cut Point Identification**: The optimal boundary index $k^\star$ in $Y$ that maximizes the sum of left and right alignments:
+
+$$
+k^\star = \arg\max_{0 \le k \le n} \big(F(k) + R(n - k)\big)
+$$
+
 5. **Recursive Conquer & Splice**:
-   $$\text{Hirschberg}(X, Y) = \text{Hirschberg}(X[1 \dots mid], Y[1 \dots k^*]) \mathbin{\Vert} \text{Hirschberg}(X[mid + 1 \dots m], Y[k^* + 1 \dots n])$$
+
+$$
+\text{Hirschberg}(X, Y) = \text{Hirschberg}(X[1 \dots mid], Y[1 \dots k^\star]) \parallel \text{Hirschberg}(X[mid + 1 \dots m], Y[k^\star + 1 \dots n])
+$$
 
 ---
 
 ## 3. Rigorous Proof of Time & Space Complexity
 
-### 3.1 Time Complexity: $\mathcal{O}(m \times n)$
+### 3.1 Time Complexity: O(m × n)
 
 At the root level, computing forward vector $F$ and reverse vector $R$ requires scanning a grid of dimension $m \times n$, taking $c \cdot m \cdot n$ operations.  
 The algorithm then splits into two subproblems with sequence lengths:
-* Subproblem 1: $\frac{m}{2} \times k^*$
-* Subproblem 2: $\frac{m}{2} \times (n - k^*)$
+* Subproblem 1: $\frac{m}{2} \times k^\star$
+* Subproblem 2: $\frac{m}{2} \times (n - k^\star)$
 
 Notice that the sum of the second sequence lengths is strictly invariant:
-$$k^* + (n - k^*) = n$$
+
+$$
+k^\star + (n - k^\star) = n
+$$
 
 Thus, the total work executed across all subproblems at recursion depth $d$ is:
-$$\sum_{i} c \left(\frac{m}{2^d} \times n_i\right) = c \cdot \frac{m}{2^d} \sum_{i} n_i = \frac{c \cdot m \cdot n}{2^d}$$
+
+$$
+\sum_{i} c \left(\frac{m}{2^d} \times n_i\right) = c \cdot \frac{m}{2^d} \sum_{i} n_i = \frac{c \cdot m \cdot n}{2^d}
+$$
 
 Summing over all recursion tree levels yields a geometric series:
-$$T(m, n) \le c \cdot m \cdot n \sum_{d=0}^{\lfloor\log_2 m\rfloor} \left(\frac{1}{2}\right)^d < c \cdot m \cdot n \sum_{d=0}^{\infty} \left(\frac{1}{2}\right)^d = 2 c \cdot m \cdot n = \mathcal{O}(m \times n)$$
 
-$$\therefore \text{Hirschberg incurs at most twice the operations of standard 2D DP, preserving strict } \mathcal{O}(m \times n) \text{ time.}$$
+$$
+T(m, n) \le c \cdot m \cdot n \sum_{d=0}^{\lfloor\log_2 m\rfloor} \left(\frac{1}{2}\right)^d < c \cdot m \cdot n \sum_{d=0}^{\infty} \left(\frac{1}{2}\right)^d = 2 c \cdot m \cdot n = \mathcal{O}(m \times n)
+$$
 
-### 3.2 Space Complexity: $\mathcal{O}(\min(m, n))$
+> **Theoretical Conclusion**: Hirschberg incurs at most twice the cell operations of standard 2D DP, preserving strict $\mathcal{O}(m \times n)$ asymptotic time while cutting space to linear bounds.
+
+### 3.2 Space Complexity: O(min(m, n))
 
 At any point during execution:
 1. Two linear vectors of size $n + 1$ are allocated to evaluate $F$ and $R$.
 2. The recursion stack depth is bounded by $\lceil\log_2 m\rceil$.
 3. Total memory consumption satisfies:
-   $$\text{Memory}(m, n) = 2 \times (n + 1) \text{ words} + \mathcal{O}(\log m) \text{ stack frames} = \mathcal{O}(\min(m, n))$$
+
+$$
+\text{Memory}(m, n) = 2 \times (n + 1) \text{ words} + \mathcal{O}(\log m) \text{ stack frames} = \mathcal{O}(\min(m, n))
+$$
 
 ---
 
@@ -156,9 +195,9 @@ All three algorithmic engines were tested on identical hardware (Apple M-series 
 
 | Testcase Category | Sequence Dimensions | Metric | Classic 2D Grid DP | Space-Optimized 2-Row | Hirschberg D&C |
 | :--- | :---: | :--- | :---: | :---: | :---: |
-| **Micro Benchmark**<br>`TC_01_01` (Textbook) | $m = 7\text{ bp}$<br>$n = 6\text{ bp}$ | **Runtime**<br>**Cells Allocated**<br>**Sequence Recovery** | $0.12\text{ ms}$<br>$56\text{ cells}$<br>`AGGTC` | $0.06\text{ ms}$<br>$14\text{ cells}$<br>Length Only (5) | $0.19\text{ ms}$<br>$14\text{ cells}$<br>`AGGTC` |
-| **Medium Stress**<br>`TC_04_01` (Scaled) | $m = 50\text{ bp}$<br>$n = 50\text{ bp}$ | **Runtime**<br>**Cells Allocated**<br>**Sequence Recovery** | $2.41\text{ ms}$<br>$2{,}601\text{ cells}$<br>Recovered (30 bp) | $0.98\text{ ms}$<br>$102\text{ cells}$<br>Length Only (30) | $3.15\text{ ms}$<br>$102\text{ cells}$<br>Recovered (30 bp) |
-| **Authentic NCBI Genomics**<br>`TC_05_01` (*rbcL* Gene) | $m = 261\text{ bp}$<br>$n = 261\text{ bp}$ | **Runtime**<br>**Cells Allocated**<br>**RAM Heap Allocation**<br>**Memory Reduction** | $14.80\text{ ms}$<br>$68{,}644\text{ cells}$<br>$\approx 549.1\text{ KB}$<br>Baseline ($0\%$) | $4.20\text{ ms}$<br>$524\text{ cells}$<br>$\approx 4.19\text{ KB}$<br>**$-99.24\%$** (No String) | $18.40\text{ ms}$<br>$524\text{ cells}$<br>$\approx 4.25\text{ KB}$<br>**$-99.23\%$ (Full LCS)** |
+| **Micro Benchmark**<br>`TC_01_01` (Textbook) | $m = 7$, $n = 6$<br>(DNA 7 bp) | **Runtime**<br>**Cells Allocated**<br>**Sequence Recovery** | 0.12 ms<br>56 cells<br>`AGGTC` | 0.06 ms<br>14 cells<br>Length Only (5 bp) | 0.19 ms<br>14 cells<br>`AGGTC` |
+| **Medium Stress**<br>`TC_04_01` (Scaled) | $m = 50$, $n = 50$<br>(Synthetic 50 bp) | **Runtime**<br>**Cells Allocated**<br>**Sequence Recovery** | 2.41 ms<br>2,601 cells<br>Recovered (30 bp) | 0.98 ms<br>102 cells<br>Length Only (30 bp) | 3.15 ms<br>102 cells<br>Recovered (30 bp) |
+| **Authentic NCBI Genomics**<br>`TC_05_01` (*rbcL* Gene) | $m = 261$, $n = 261$<br>(Rice vs Maize 261 bp) | **Runtime**<br>**Cells Allocated**<br>**RAM Allocation**<br>**Memory Reduction** | 14.80 ms<br>68,644 cells<br>~549.1 KB<br>Baseline (0%) | 4.20 ms<br>524 cells<br>~4.19 KB<br>**-99.24%** (No String) | 18.40 ms<br>524 cells<br>~4.25 KB<br>**-99.23% (Full LCS)** |
 
 > [!TIP]
 > **Empirical Verdict**: On authentic chloroplast *rbcL* genomic sequences, Hirschberg achieves a **99.23% reduction in matrix memory footprint** while recovering the full 254-bp alignment sequence with negligible execution overhead ($< 4\text{ ms}$ delta).
@@ -244,7 +283,7 @@ The repository contains 30 standardized testcases organized into 6 orthogonal ca
 | **02_boundary** | 5 | Extreme boundary conditions | Both empty (`""`), one empty, disjoint alphabet (`AAAA` vs `CCCC`), identical strings. |
 | **03_small** | 5 | Micro strings ($len \le 6\text{ bp}$) | Fine-grained manual trace verification and single-step inspection. |
 | **04_large** | 5 | Scaled high-load stress tests ($50\text{--}400\text{ bp}$) | Benchmark scaling limits and Garbage Collection stability. |
-| **05_special** | 5 | Authentic NCBI plant genomics (*rbcL* gene) | Real-world chloroplast divergence (*Oryza sativa* vs *Zea mays*, $261\text{ bp}$). |
+| **05_special** | 5 | Authentic NCBI plant genomics (*rbcL* gene) | Real-world chloroplast divergence (*Oryza sativa* vs *Zea mays*, 261 bp). |
 | **06_invalid** | 5 | Negative input sanitization & fuzzing | Numeric characters, invalid IUPAC symbols, internal whitespace, buffer overflow ($> 5{,}000\text{ bp}$). |
 
 ---
@@ -252,7 +291,7 @@ The repository contains 30 standardized testcases organized into 6 orthogonal ca
 ## 7. Interactive Visualizer Capabilities
 
 1. **Matrix Grid & Traceback Visualization**:
-   Row-by-row animated evaluation with pulse indicators on matching characters and directional vector arrows ($\nwarrow, \uparrow, \leftarrow$).
+   Row-by-row animated evaluation with pulse indicators on matching characters and directional vector arrows (`↖`, `↑`, `←`).
 2. **Synchronous Python Code Stepper**:
    Side-by-side pseudocode execution displaying stack frames and variable scopes.
 3. **Genomic 3D Lab (WebGL Three.js)**:
