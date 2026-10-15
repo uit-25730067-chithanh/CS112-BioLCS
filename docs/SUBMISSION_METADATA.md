@@ -1,16 +1,16 @@
 # VNUHCM-UIT Academic Submission Metadata
 
-BÀI TẬP LỚN MÔN PHÂN TÍCH VÀ THIẾT KẾ THUẬT TOÁN (CS112.F31.LT.TTNT)  
-TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN - ĐHQG-HCM (UIT)
+TERM PROJECT: ALGORITHM ANALYSIS & DESIGN (CS112.F31.LT.TTNT)  
+UNIVERSITY OF INFORMATION TECHNOLOGY — VNUHCM (UIT)
 
 ---
 
 ## 1. Student & Course Profile
-- **Full Name**: Đặng Chí Thanh
-- **Student ID (MSSV)**: 25730067
-- **Course Code**: CS112.F31.LT.TTNT (Phân tích và Thiết kế Thuật toán)
-- **Supervising Lecturer**: TS. Huỳnh Thị Thanh Thương
-- **Project Topic**: BioLCS Studio — Nền Tảng Trực Quan Hóa Đa Giải Thuật So Khớp Hệ Gen Thực Vật & Đột Biến Di Truyền (LCS & Sequence Alignment)
+- **Full Name**: Dang Chi Thanh
+- **Student ID**: 25730067
+- **Course Code**: CS112.F31.LT.TTNT (Algorithm Analysis & Design)
+- **Supervising Lecturer**: Dr. Huynh Thi Thanh Thuong
+- **Project Topic**: BioLCS Studio — Plant Genomics Sequence Alignment & LCS Algorithm Suite
 
 ---
 
