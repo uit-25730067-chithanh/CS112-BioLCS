@@ -6,6 +6,8 @@
 [![Node.js Version](https://img.shields.io/badge/Node.js-%3E%3D18.0-339933?style=for-the-badge&logo=node.js)](package.json)
 [![Academic Course](https://img.shields.io/badge/VNUHCM--UIT-CS112%20Term%20Project-0052cc?style=for-the-badge)](https://www.uit.edu.vn)
 
+![BioLCS Studio Cover](docs/cover.png)
+
 > **BioLCS Studio** is a modern, web-native algorithm visualizer and benchmark suite designed to tackle the classic quadratic memory bottleneck in bioinformatics sequence alignment. It contrasts standard 2D Dynamic Programming against linear-space algorithms (2-Row Rolling DP and Hirschberg's Divide-and-Conquer) on real-world plant genomics sequences (*Oryza sativa* vs. *Zea mays* chloroplast *rbcL* genes).
 
 ---
