@@ -22,8 +22,10 @@ export function init2DFallback(canvas, container) {
   let activeRung = -1;
   let isMatchActive = false;
 
+  let isPaused = false;
+
   const render = () => {
-    if (!ctx) return;
+    if (!ctx || isPaused) return;
     const w = canvas.width / window.devicePixelRatio;
     const h = canvas.height / window.devicePixelRatio;
     ctx.clearRect(0, 0, w, h);
@@ -60,6 +62,19 @@ export function init2DFallback(canvas, container) {
 
   return {
     resize,
+    pause: () => {
+      isPaused = true;
+      if (animId) {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
+    },
+    resume: () => {
+      if (isPaused) {
+        isPaused = false;
+        render();
+      }
+    },
     updateStep: (snapshot) => {
       angle += 0.05;
       const cell = snapshot?.currentCell;
@@ -75,6 +90,7 @@ export function init2DFallback(canvas, container) {
       }
     },
     destroy: () => {
+      isPaused = true;
       if (animId) cancelAnimationFrame(animId);
     }
   };

@@ -24,6 +24,7 @@ export class DNAOrbitController {
 
     this.raycaster = new this.THREE.Raycaster();
     this.mouse = new this.THREE.Vector2(-999, -999);
+    this.mouseMoved = false;
     this.hoveredObject = null;
     this.helixGroup = null;
     this.spheres = [];
@@ -39,6 +40,7 @@ export class DNAOrbitController {
   _bindEvents() {
     this._onPointerDown = (e) => {
       this.isDragging = true;
+      this.mouseMoved = true;
       this.prevX = e.clientX;
       this.prevY = e.clientY;
       this.canvas.setPointerCapture?.(e.pointerId);
@@ -49,6 +51,7 @@ export class DNAOrbitController {
       const rect = this.canvas.getBoundingClientRect();
       this.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       this.mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      this.mouseMoved = true;
 
       if (this.isDragging) {
         const dx = e.clientX - this.prevX;
@@ -68,6 +71,16 @@ export class DNAOrbitController {
       }, 2000);
     };
 
+    this._onPointerLeave = () => {
+      this.mouse.set(-999, -999);
+      this.mouseMoved = true;
+      if (this.hoveredObject) {
+        this._unhighlight(this.hoveredObject);
+        this.hoveredObject = null;
+        this.options.onHover?.(null);
+      }
+    };
+
     this._onWheel = (e) => {
       e.preventDefault();
       const zoomDelta = e.deltaY * 0.035;
@@ -78,6 +91,7 @@ export class DNAOrbitController {
     this.canvas.addEventListener('pointermove', this._onPointerMove);
     this.canvas.addEventListener('pointerup', this._onPointerUp);
     this.canvas.addEventListener('pointercancel', this._onPointerUp);
+    this.canvas.addEventListener('pointerleave', this._onPointerLeave);
     this.canvas.addEventListener('wheel', this._onWheel, { passive: false });
   }
 
@@ -94,8 +108,9 @@ export class DNAOrbitController {
     this.helixGroup.rotation.x = this.rotX;
     this.helixGroup.rotation.y = this.rotY;
 
-    // Hover Raycasting
-    if (this.camera && this.spheres.length > 0) {
+    // Hover Raycasting: only calculate when mouse position has changed
+    if (this.camera && this.spheres.length > 0 && this.mouseMoved) {
+      this.mouseMoved = false;
       this.raycaster.setFromCamera(this.mouse, this.camera);
       const intersects = this.raycaster.intersectObjects(this.spheres);
 
@@ -158,6 +173,7 @@ export class DNAOrbitController {
     this.canvas.removeEventListener('pointermove', this._onPointerMove);
     this.canvas.removeEventListener('pointerup', this._onPointerUp);
     this.canvas.removeEventListener('pointercancel', this._onPointerUp);
+    this.canvas.removeEventListener('pointerleave', this._onPointerLeave);
     this.canvas.removeEventListener('wheel', this._onWheel);
     clearTimeout(this.idleTimer);
   }

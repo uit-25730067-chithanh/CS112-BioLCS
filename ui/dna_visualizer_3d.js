@@ -21,6 +21,15 @@ export class DNAVisualizer3D {
       'A': '#38bdf8', 'T': '#fb7185', 'G': '#fbbf24', 'C': '#a78bfa',
       'U': '#34d399', 'default': '#38bdf8', 'matchBond': 0x10b981
     };
+    this.targetFPS = 60;
+    this.frameInterval = 1000 / this.targetFPS;
+    this.lastFrameTime = performance.now();
+    this.isVisible = true;
+    this.isTabActive = typeof document !== 'undefined' ? !document.hidden : true;
+    this.isRendering = false;
+    this.observer = null;
+    this._onVisibilityChange = null;
+
     if (this.container) this.init();
   }
 
@@ -60,6 +69,7 @@ export class DNAVisualizer3D {
         this._initThreeJS();
         this.mode = 'three';
         this.ui.modeTag.textContent = '3D WebGL Molecular (Three.js)';
+        this._setupVisibilityObservers();
         return;
       } catch (err) {
         console.warn('Three.js init failed, falling back to 2D Canvas:', err);
@@ -69,6 +79,7 @@ export class DNAVisualizer3D {
     this.fallback2D = init2DFallback(this.canvas, this.container);
     this.mode = '2d';
     this.ui.modeTag.textContent = '2D Cyber Canvas (High-FPS Fallback)';
+    this._setupVisibilityObservers();
   }
 
   _initThreeJS() {
@@ -98,14 +109,88 @@ export class DNAVisualizer3D {
     });
 
     this._rebuildMesh();
+    this._startLoop();
+  }
 
-    const loop = () => {
-      this.controller.update();
-      if (this.meshData?.particles) this.meshData.particles.rotation.y += 0.002;
-      this.renderer.render(this.scene, this.camera);
+  _setupVisibilityObservers() {
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window && this.container) {
+      this.observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          const wasVisible = this.isVisible;
+          this.isVisible = entry.isIntersecting;
+          if (this.isVisible && !wasVisible) {
+            this.lastFrameTime = performance.now();
+            this._startLoop();
+            if (this.mode === 'three' && this.renderer && this.scene && this.camera) {
+              this.renderer.render(this.scene, this.camera);
+            } else if (this.fallback2D?.resume) {
+              this.fallback2D.resume();
+            }
+          } else if (!this.isVisible) {
+            this._stopLoop();
+            if (this.fallback2D?.pause) {
+              this.fallback2D.pause();
+            }
+          }
+        }
+      }, { threshold: 0.05 });
+      this.observer.observe(this.container);
+    }
+
+    if (typeof document !== 'undefined') {
+      this._onVisibilityChange = () => {
+        const wasActive = this.isTabActive;
+        this.isTabActive = !document.hidden;
+        if (this.isTabActive && !wasActive) {
+          this.lastFrameTime = performance.now();
+          this._startLoop();
+          if (this.mode === 'three' && this.renderer && this.scene && this.camera) {
+            this.renderer.render(this.scene, this.camera);
+          } else if (this.fallback2D?.resume) {
+            this.fallback2D.resume();
+          }
+        } else if (!this.isTabActive) {
+          this._stopLoop();
+          if (this.fallback2D?.pause) {
+            this.fallback2D.pause();
+          }
+        }
+      };
+      document.addEventListener('visibilitychange', this._onVisibilityChange);
+    }
+  }
+
+  _startLoop() {
+    if (this.isRendering) return;
+    this.isRendering = true;
+    this.lastFrameTime = performance.now();
+
+    const loop = (currentTime = performance.now()) => {
+      if (!this.isRendering) return;
       this.animId = requestAnimationFrame(loop);
+
+      if (!this.isVisible || !this.isTabActive) return;
+
+      const elapsed = currentTime - this.lastFrameTime;
+      if (elapsed < this.frameInterval) return;
+
+      this.lastFrameTime = currentTime - (elapsed % this.frameInterval);
+
+      if (this.mode === 'three' && this.renderer && this.scene && this.camera) {
+        this.controller?.update();
+        if (this.meshData?.particles) this.meshData.particles.rotation.y += 0.002;
+        this.renderer.render(this.scene, this.camera);
+      }
     };
-    loop();
+    this.animId = requestAnimationFrame(loop);
+  }
+
+  _stopLoop() {
+    this.isRendering = false;
+    if (this.animId) {
+      cancelAnimationFrame(this.animId);
+      this.animId = null;
+    }
   }
 
   _rebuildMesh() {
@@ -342,7 +427,11 @@ export class DNAVisualizer3D {
   }
 
   destroy() {
-    if (this.animId) cancelAnimationFrame(this.animId);
+    this._stopLoop();
+    this.observer?.disconnect();
+    if (this._onVisibilityChange && typeof document !== 'undefined') {
+      document.removeEventListener('visibilitychange', this._onVisibilityChange);
+    }
     this.controller?.destroy();
     this.renderer?.dispose();
     this.fallback2D?.destroy();
