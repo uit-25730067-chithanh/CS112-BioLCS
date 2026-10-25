@@ -207,7 +207,7 @@ All three algorithmic engines were tested on identical hardware (Apple M-series 
 ## 5. System Architecture & Technical Craftsmanship
 
 ```
-CS112-BIOLCS/
+CS112-BioLCS/
 ├── index.html                 # Semantic HTML5 application entry point
 ├── package.json               # NPM scripts and zero-dependency manifest
 ├── vercel.json                # Vercel static Edge deployment routing
@@ -312,8 +312,8 @@ Clone and serve the repository using any local HTTP static server:
 
 ```bash
 # Clone the repository
-git clone https://github.com/uit-25730067-chithanh/CS112-BIOLCS.git
-cd CS112-BIOLCS
+git clone https://github.com/uit-25730067-chithanh/CS112-BioLCS.git
+cd CS112-BioLCS
 
 # Launch via static server (no build step needed)
 npx serve . -p 3000
