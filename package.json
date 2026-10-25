@@ -6,10 +6,10 @@
   "homepage": "https://biolcs.vercel.app",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/uit-25730067-chithanh/cs112-biolcs.git"
+    "url": "git+https://github.com/uit-25730067-chithanh/CS112-BIOLCS.git"
   },
   "bugs": {
-    "url": "https://github.com/uit-25730067-chithanh/cs112-biolcs/issues"
+    "url": "https://github.com/uit-25730067-chithanh/CS112-BIOLCS/issues"
   },
   "scripts": {
     "test": "node tests/test_core.js",

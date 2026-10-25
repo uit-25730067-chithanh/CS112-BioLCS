@@ -17,7 +17,7 @@ UNIVERSITY OF INFORMATION TECHNOLOGY — VNUHCM (UIT)
 ## 2. Public URLs & Experience Links
 - **Live Interactive Demo (Vercel Production)**: [https://biolcs.vercel.app](https://biolcs.vercel.app)
 - **Video Walkthrough (YouTube 4K Ultra HD 60fps)**: [https://youtu.be/byLa-Dqlw0Q](https://youtu.be/byLa-Dqlw0Q) (Duration: 06:28)
-- **Source Code Repository**: [https://github.com/uit-25730067-chithanh/cs112-biolcs](https://github.com/uit-25730067-chithanh/cs112-biolcs)
+- **Source Code Repository**: [https://github.com/uit-25730067-chithanh/CS112-BIOLCS](https://github.com/uit-25730067-chithanh/CS112-BIOLCS)
 
 ---
 
